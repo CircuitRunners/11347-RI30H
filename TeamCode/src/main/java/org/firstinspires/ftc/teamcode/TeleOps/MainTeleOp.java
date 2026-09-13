@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Config.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystem.intake;
 import org.firstinspires.ftc.teamcode.subsystem.outtake;
+import org.firstinspires.ftc.teamcode.subsystem.transfer;
 
 
 //@Disabled
@@ -16,7 +17,7 @@ public class MainTeleOp extends OpMode {
     private MecanumDrive drive;
     private intake intake;
     private outtake outtakePollen;
-
+    private transfer transfer;
     private outtake outtakeNectar;
     double GamepadLeftY;
     double GamepadLeftX;
@@ -34,6 +35,9 @@ public class MainTeleOp extends OpMode {
 
         intake = new intake();
         intake.init(hardwareMap);
+
+        transfer = new transfer();
+        transfer.init(hardwareMap);
 
         telemetry.addLine("Initialized");
         telemetry.update();
@@ -54,10 +58,13 @@ public class MainTeleOp extends OpMode {
 
         if(gamepad1.left_trigger > 0.5){
             intake.setPower(0.9);
+            intake.servoSetState(true);
         }else if(gamepad1.right_trigger > 0.5){
             intake.setPower(-0.7);
+            intake.servoSetState(false);
         }else{
             intake.setPower(0.0);
+            intake.servoSetState(false);
         }
 
 
@@ -72,6 +79,15 @@ public class MainTeleOp extends OpMode {
         }else{
             outtakeNectar.setTargetRPM(500.0);
         }
+
+        if(gamepad1.dpad_left){
+            transfer.setTransferServoToggle(true);
+        }else{
+            transfer.setTransferServoToggle(false);
+        }
+
+        transfer.tick();
+        intake.tick();
 
         telemetry.update();
     }

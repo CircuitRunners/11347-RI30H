@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.TeleOps.test;
 
+import com.bylazar.configurables.annotations.Configurable;
+import com.bylazar.configurables.annotations.IgnoreConfigurable;
+import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,6 +16,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
  * Add kD to damp oscillations during spin-up, might not be needed
  */
 
+@Configurable
 @TeleOp(name="ShooterPIDTest - NECTAR")
 public class ShooterPIDTestNectar extends OpMode {
     private DcMotorEx shooter;
@@ -34,6 +39,9 @@ public class ShooterPIDTestNectar extends OpMode {
     // Toggles shooter on and off in dashboard
     public static boolean runShooter = false;
 
+    @IgnoreConfigurable
+    static TelemetryManager telemetryM;
+
 
     @Override
     public void init() {
@@ -48,8 +56,9 @@ public class ShooterPIDTestNectar extends OpMode {
 
         applyPIDF();
 
-        telemetry.addLine("init done");
-        telemetry.update();
+        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+        telemetryM.addLine("init done");
+        telemetryM.update(telemetry);
     }
 
     //TODO: test if this works, if not remove
@@ -91,14 +100,14 @@ public class ShooterPIDTestNectar extends OpMode {
         double errorShooterRPM = TARGET_RPM - currShooterRPM;
 
         // ===== Graphs on FTC Dashboard =====
-        telemetry.addData("target_shooter_rpm", TARGET_RPM);
-        telemetry.addData("current_shooter_rpm", currShooterRPM);
-        telemetry.addData("target_motor_rpm", targetMotorRPM);
-        telemetry.addData("current_motor_rpm", currMotorRPM);
-        telemetry.addData("error_shooter_rpm", errorShooterRPM);
-        telemetry.addData("error_motor_rpm", errorMotorRPM);
-        telemetry.addData("motor_ticks_per_sec", currTicksPerSec);
-        telemetry.addData("kF Local Value: ", kfValue);
-
+        telemetryM.addData("target_shooter_rpm", TARGET_RPM);
+        telemetryM.addData("current_shooter_rpm", currShooterRPM);
+        telemetryM.addData("target_motor_rpm", targetMotorRPM);
+        telemetryM.addData("current_motor_rpm", currMotorRPM);
+        telemetryM.addData("error_shooter_rpm", errorShooterRPM);
+        telemetryM.addData("error_motor_rpm", errorMotorRPM);
+        telemetryM.addData("motor_ticks_per_sec", currTicksPerSec);
+        telemetryM.addData("kF Local Value: ", kfValue);
+        telemetryM.update(telemetry);
     }
 }
