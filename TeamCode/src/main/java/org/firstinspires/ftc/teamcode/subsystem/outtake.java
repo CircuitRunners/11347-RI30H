@@ -163,7 +163,7 @@ public class outtake{
         double currMotorRPM = (currTicksPerSec * 60.0) / TICKS_PER_REV;
         double currShooterRPM = currMotorRPM * GEAR_RATIO;
 
-        return currShooterRPM;  
+        return currShooterRPM;
     }
 
     public double getMotorVoltage() {
